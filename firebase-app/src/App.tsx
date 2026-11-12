@@ -1,0 +1,15 @@
+import ProductoForm from './components/ProductoForm'
+import{ProductoLista} from './components/ProductoLista'
+import './App.css'
+
+function App() {
+  return (
+    <div>
+      <h1>Registro de productos</h1>
+      <ProductoForm />
+      <ProductoLista />
+    </div>
+  )
+}
+
+export default App
