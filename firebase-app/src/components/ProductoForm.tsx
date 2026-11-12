@@ -1,15 +1,27 @@
 import { useState, type SyntheticEvent } from 'react'
-import { crearProducto } from '../services/productoService'
+import { crearProducto,actualizarProducto, type ProductoConId } from '../services/productoService'
 
-export default function ProductoForm() {
-  const [nombre, setNombre] = useState('')
-  const [precio, setPrecio] = useState('')
-  const [stock, setStock] = useState('')
+interface ProductoFormProps {
+  productoEditar: ProductoConId | null;
+}
+
+export default function ProductoForm({ productoEditar }: ProductoFormProps) {
+  const [nombre, setNombre] = useState(productoEditar?.nombre ??"")
+  const [precio, setPrecio] = useState(productoEditar?.precio?.toString() ?? "")
+  const [stock, setStock] = useState(productoEditar?.stock?.toString() ?? "")
   const [guardando, setGuardando] = useState(false)
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
     setGuardando(true)
+    if(productoEditar) {
+            await actualizarProducto(productoEditar.id, 
+                nombre.trim(), 
+                Number(precio), 
+                Number(stock))
+            console.log('Documento actualizado con ID: ', productoEditar.id)
+            setGuardando(false)
+        }else{
     try {
       const id = await crearProducto(
         nombre.trim(),
@@ -25,7 +37,7 @@ export default function ProductoForm() {
       console.error('Error añadiendo documento: ', error)
     } finally {
       setGuardando(false)
-    }
+    }}
   }
 
   return (
@@ -54,7 +66,11 @@ export default function ProductoForm() {
         required
       />
       <button type="submit" disabled={guardando}>
-        {guardando ? 'Guardando...' : 'Guardar'}
+        {guardando
+          ? 'Guardando...'
+          : productoEditar
+            ? 'Actualizar'
+            : 'Guardar'}
       </button>
     </form>
   )
