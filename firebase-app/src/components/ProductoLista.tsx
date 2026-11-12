@@ -1,7 +1,11 @@
 import {useEffect, useState} from "react";
 import {obtenerProductos, type ProductoConId} from "../services/productoService";
 
-export const ProductoLista = () => {
+interface ProductoListaProps {
+    onEditar: (producto: ProductoConId) => void;
+}
+
+export const ProductoLista = ({ onEditar }: ProductoListaProps) => {
     const [productos, setProductos] = useState<ProductoConId[]>([]);
     useEffect(() => {
         const cargarProductos = async () => {
@@ -25,6 +29,7 @@ export const ProductoLista = () => {
                         <p>Nombre: {producto.nombre}</p>
                         <p>Precio: ${producto.precio.toFixed(2)}</p>
                         <p>Stock: {producto.stock}</p>
+                        <button onClick={() => onEditar(producto)}>Editar</button>
                     </div>
                 ))
             }

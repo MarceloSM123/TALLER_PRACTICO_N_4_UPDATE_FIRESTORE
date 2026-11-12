@@ -20,7 +20,9 @@ export default function ProductoForm({ productoEditar }: ProductoFormProps) {
                 Number(precio), 
                 Number(stock))
             console.log('Documento actualizado con ID: ', productoEditar.id)
+            
             setGuardando(false)
+
         }else{
     try {
       const id = await crearProducto(
